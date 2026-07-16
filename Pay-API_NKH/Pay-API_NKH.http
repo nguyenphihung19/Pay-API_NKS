@@ -1,0 +1,6 @@
+@Pay_API_NKH_HostAddress = http://localhost:5086
+
+GET {{Pay_API_NKH_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
