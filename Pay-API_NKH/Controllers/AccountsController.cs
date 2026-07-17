@@ -74,5 +74,30 @@ namespace Pay_API_NKH.Controllers
                 return StatusCode(500, new { message = "Đã xảy ra lỗi hệ thống khi lưu dữ liệu.", error = ex.Message });
             }
         }
+        // thêm dòng này
+        // GET: api/accounts/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAccountById(string id) // Sửa int thành string để nhận Số tài khoản
+        {
+            // 1. Tìm tài khoản trong Database theo AccountNumber
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.AccountNumber == id);
+
+            // 2. Nếu không tìm thấy, trả về mã lỗi 404 Not Found kèm thông báo
+            if (account == null)
+            {
+                return NotFound(new { message = $"Không tìm thấy tài khoản với số tài khoản = {id}" });
+            }
+
+            // 3. Nếu tìm thấy, trả về thông tin chi tiết tài khoản với mã 200 OK
+            return Ok(new
+            {
+                account.AccountNumber,
+                account.AccountHolder,
+                account.Phone,
+                account.CitizenId,
+                account.ExpiryDate,
+                account.AvailableBalance
+            });
+        }
     }
 }
