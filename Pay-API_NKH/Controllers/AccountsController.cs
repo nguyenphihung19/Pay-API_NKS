@@ -67,7 +67,13 @@ namespace Pay_API_NKH.Controllers
                 _context.Accounts.Add(newAccount);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Đăng ký tài khoản thành công!", account = newAccount });
+                // SỬA LẠI ĐOẠN này
+                return Ok(new
+                {
+                    status = "SUCCESS",
+                    accountId = newAccount.AccountNumber,
+                    message = "Tạo tài khoản thành công"
+                });
             }
             catch (Exception ex)
             {

@@ -45,6 +45,7 @@ namespace Pay_API_NKH.Controllers
             toAcc.AvailableBalance += req.Amount;
 
             // Ghi log 2 giao dịch (gửi và nhận)
+            // Ghi log giao dịch người gửi
             _context.Transactions.Add(new Transaction
             {
                 TransactionId = txnId,
@@ -55,9 +56,10 @@ namespace Pay_API_NKH.Controllers
                 Note = req.Note
             });
 
+            // Ghi log giao dịch người nhận (SỬA Ở ĐÂY)
             _context.Transactions.Add(new Transaction
             {
-                TransactionId = txnId,
+                TransactionId = txnId + "_1", // <--- Thêm "_1" vào sau để ID không bị trùng trong DB
                 AccountNumber = toAcc.AccountNumber,
                 Amount = req.Amount,
                 TransactionDate = now,
