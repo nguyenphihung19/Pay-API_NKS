@@ -18,11 +18,18 @@ namespace Pay_API_NKH.Controllers
 
         // GET: api/transactions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions(
+        public async Task<IActionResult> GetTransactions( // <--- SỬA: Đổi kiểu trả về thành Task<IActionResult>
+            [FromQuery] string? accountNumber,             // <--- THÊM: Nhận tham số accountNumber từ query
             [FromQuery] DateTime? fromDate,
             [FromQuery] DateTime? toDate)
         {
             var query = _context.Transactions.AsQueryable();
+
+            // <--- THÊM: Lọc theo accountNumber nếu người dùng truyền vào
+            if (!string.IsNullOrEmpty(accountNumber))
+            {
+                query = query.Where(t => t.AccountNumber == accountNumber);
+            }
 
             if (fromDate.HasValue)
             {
@@ -34,7 +41,20 @@ namespace Pay_API_NKH.Controllers
                 query = query.Where(t => t.TransactionDate <= toDate.Value.AddDays(1));
             }
 
-            return await query.ToListAsync();
+            // <--- SỬA/THÊM: Chọn đúng các trường và định dạng camelCase chuẩn ví dụ đề bài
+            var result = await query
+                .OrderByDescending(t => t.TransactionDate)
+                .Select(t => new
+                {
+                    transactionId = t.TransactionId,
+                    accountNumber = t.AccountNumber,
+                    amount = t.Amount,
+                    transactionDate = t.TransactionDate,
+                    note = t.Note
+                })
+                .ToListAsync();
+
+            return Ok(result); // <--- SỬA: Trả về Ok(result)
         }
     }
 }

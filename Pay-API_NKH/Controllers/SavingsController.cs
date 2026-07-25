@@ -95,6 +95,25 @@ namespace Pay_API_NKH.Controllers
                 return StatusCode(500, new { message = "Lỗi hệ thống khi lưu dữ liệu.", error = ex.Message });
             }
         }
+        // GET: /api/savings/rates
+        [HttpGet("rates")]
+        public IActionResult GetSavingsRates()
+        {
+            var rates = new[]
+            {
+        new { termMonths = 1, interestRate = 3.5 },
+        new { termMonths = 2, interestRate = 3.7 },
+        new { termMonths = 3, interestRate = 3.8 },
+        new { termMonths = 6, interestRate = 4.8 },
+        new { termMonths = 9, interestRate = 4.9 },
+        new { termMonths = 12, interestRate = 5.2 },
+        new { termMonths = 18, interestRate = 5.5 },
+        new { termMonths = 24, interestRate = 5.8 },
+        new { termMonths = 36, interestRate = 5.8 }
+    };
+
+            return Ok(rates);
+        }
 
         private decimal GetInterestRateByTerm(int termMonths)
         {
